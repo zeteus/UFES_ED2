@@ -35,17 +35,12 @@ void remove_Node(Node* rmvN, Node* antN) {
 
 void kill_Josephus(Node* mainNo, int N, int M) {
     int k = 1;
-    int j = 0;
     Node* auxNo = mainNo;
 
     while(k < N) {
-        while(j < M - 1) {
-            auxNo = auxNo->next;
-            j++;
-        }
+        for(int j = 0; j < M - 1; j++) auxNo = auxNo->next;
         remove_Node(auxNo->next, auxNo);
         auxNo = auxNo->next;
-        j = 0;
         k ++;
     }
 }
