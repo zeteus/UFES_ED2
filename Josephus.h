@@ -15,6 +15,8 @@ Node* init_List(int N);
 
 void print_List(Node* n, int N);
 
-void remove_Node(Node* n);
+void remove_Node(Node* rmvN, Node* antN);
+
+void kill_Josephus(Node* mainNo, int N, int M);
 
 #endif /*_JOSEPHUS_H */
