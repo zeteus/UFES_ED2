@@ -50,25 +50,26 @@ int is_Multiple(int n1, int n2) {
 
 void mark_prime(Node* list) {
     int i = list->value;
+    Node* aux = list;
 
-    while(list != NULL) {
-        if(list->value == i) {
-            list = list->next;
+    while(aux != NULL) {
+        if(aux->value == i) {
+            aux = aux->next;
         }
         else {
-            if(is_Multiple(i, list->value)) {
-                list->prime = 'n';
-                list = list->next;
+            if(is_Multiple(i, aux->value)) {
+                aux->prime = 'n';
+                aux = aux->next;
             }
             else {
-                list = list->next;
+                aux = aux->next;
             }
         }
     }
 }
 
 Node* next_prime(Node* list) {
-    while(list->prime != 'n') {
+    while(list != NULL && list->prime == 'n') {
         list = list->next;
     }
     return list;

@@ -1,20 +1,24 @@
 #include "Sieve.h"
 
-int N = 10;
+int N = 1000;
 
 int main() {
-    Node* node;
+    Node* root;
 
     //Criando a lista de 2 até N
-    node = init_List(N);
-    while(node != NULL){
-        mark_prime(node);
-        node = next_prime(node->next);
+    root = init_List(N);
+    Node* aux = root;
+    
+    while(aux != NULL){
+        mark_prime(aux);
+        // printf("%i\n", aux->value);
+        aux = next_prime(aux->next);
+        // printf("%i\n", aux->value);
     }
-    print_List(node, N);
+    print_List(root, N);
 
     //Liberando a lista
-    remove_List(node);
+    remove_List(root);
 
     return 0;
 }

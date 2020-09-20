@@ -13,10 +13,10 @@ Node* init_List(int N) {
     for( int i = N - 1; i > 0; i-- )
         atualNode = init_Node(atualNode, i);
     mainNode->next = atualNode; 
-    return atualNode;
+    return mainNode;
 }
 
-void print_List(Node* n, int N) {
+void print_List(Node* n) {
     Node* aux = n;
 
     do {
@@ -27,20 +27,18 @@ void print_List(Node* n, int N) {
 
 void remove_Node(Node* rmvN, Node* antN) {
     Node* nextN = rmvN->next;
-    Node* auxN = rmvN;
-
     antN->next = nextN;
-    free(auxN);
+    free(rmvN);
 }
 
-void kill_Josephus(Node* mainNo, int N, int M) {
+int kill_Josephus(Node* mainNo, int N, int M) {
     int k = 1;
-    Node* auxNo = mainNo;
 
     while(k < N) {
-        for(int j = 0; j < M - 1; j++) auxNo = auxNo->next;
-        remove_Node(auxNo->next, auxNo);
-        auxNo = auxNo->next;
+        for(int j = 0; j < M - 1; j++) mainNo = mainNo->next;
+        remove_Node(mainNo->next, mainNo);
         k ++;
     }
+
+    return mainNo->value;
 }
