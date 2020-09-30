@@ -1,6 +1,8 @@
-#include "ArvoreBinaria.h"
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "BinaryTree.h"
+#include "Pilha.h"
+#include "Fila.h"
 
 /**
 Contem um inteiro e dois apontadores (esquerda/direita)
@@ -54,19 +56,6 @@ int insere_ArvBin(ArvBin* raiz, int valor){
 }
 
 /**
-Pesquisa um valor a partir da árvore raiz
-retorna 1 se encontrar o valor e 0 caso não encontre
-*/
-int consulta_ArvBin(ArvBin *raiz, int valor){
-    if(estaVazia_ArvBin(*raiz)){
-        return 0;
-    }
-    if((*raiz) -> num > valor) return consulta_ArvBin(&(*raiz) -> pEsq, valor);
-    if((*raiz) -> num < valor) return consulta_ArvBin(&(*raiz) -> pDir, valor);
-    return (*raiz) -> num;
-}
-
-/**
 Verifica se a árvore está vazia
 */
 int estaVazia_ArvBin(ArvBin raiz){
@@ -77,49 +66,20 @@ int estaVazia_ArvBin(ArvBin raiz){
     }
 }
 
-/* 
-Conta o número de nós não-folha de uma árvore binária 
-retorna: Numero de nós não folha
-*/
-int totalNaoFolha_ArvBin(ArvBin *raiz){
-    if(estaVazia_ArvBin(*raiz)) return 0;
-    return totalNO_ArvBin(raiz) - totalFolha_ArvBin(raiz);
-}
-
-/** 
-Conta o número de folhas de uma árvore binária.
-retorna: Numero de nós folhas
-*/
-int totalFolha_ArvBin(ArvBin *raiz){
-    if(raiz == NULL) return 0;
-
-    if(estaVazia_ArvBin(*raiz)) return 0;
-    if(((*raiz) -> pEsq == NULL) && ((*raiz) -> pDir == NULL)){
-        return 1;
-    }else{
-        return totalFolha_ArvBin(&(*raiz) -> pEsq) + totalFolha_ArvBin(&(*raiz) -> pDir);
+/*retorna qual a altura de uma árvore binária. */
+int altura_ArvBin(ArvBin *raiz) {
+    if (estaVazia_ArvBin(*raiz)) return -1;
+    int altEsq = altura_ArvBin((*raiz)->pEsq);
+    int altDir = altura_ArvBin((*raiz)->pDir);
+    if (altEsq > altDir) {
+        return altEsq + 1;
+    } else {
+        return altDir + 1;
     }
 }
 
-/*conta o número de nós de uma árvore binária. */
-int totalNO_ArvBin(ArvBin *raiz){
-    if(raiz == NULL) return 0;
-    
-    if(estaVazia_ArvBin(*raiz)) return 0;
-
-    return totalNO_ArvBin(&(*raiz) -> pEsq) + 1 + totalNO_ArvBin(&(*raiz) -> pDir);
-}
-
-/*retorna qual a altura de uma árvore binária. */
-int altura_ArvBin(ArvBin *raiz) {
-    if(raiz == NULL) return -1;
-    if(estaVazia_ArvBin(*raiz)) return 0;
-    
-    return 1 + maior(altura_ArvBin(raiz->pEsq), altura_ArvBin(raiz->pDir));
-}
-
 /** Imprime em pre-ordem */ 
-void preOrdem_ArvBin(ArvBin *raiz){
+void r_preOrdem_ArvBin(ArvBin *raiz){
     if(estaVazia_ArvBin(*raiz)) return;
     if((*raiz) == NULL) return;
     printf("%d\n", (*raiz) -> num);
@@ -128,7 +88,7 @@ void preOrdem_ArvBin(ArvBin *raiz){
 }
 
 /** Imprime em-ordem */ 
-void emOrdem_ArvBin(ArvBin *raiz){
+void r_emOrdem_ArvBin(ArvBin *raiz){
     if(estaVazia_ArvBin(*raiz)) return;
     if((*raiz) == NULL) return;
     preOrdem_ArvBin(&(*raiz) -> pEsq);
@@ -137,7 +97,7 @@ void emOrdem_ArvBin(ArvBin *raiz){
 }
 
 /** Imprime em pós-ordem */ 
-void posOrdem_ArvBin(ArvBin *raiz){
+void r_posOrdem_ArvBin(ArvBin *raiz){
     if(estaVazia_ArvBin(*raiz)) return;
     if((*raiz) == NULL) return;
     preOrdem_ArvBin(&(*raiz) -> pEsq);
@@ -145,10 +105,54 @@ void posOrdem_ArvBin(ArvBin *raiz){
     printf("%d\n", (*raiz) -> num);
 }
 
+/** Imprime em pre-ordem */ 
+void i_preOrdem_ArvBin(ArvBin *raiz) {
+    Pilha *p = cria_pilha();
+    while ((tamanho_pilha(p) > 0) || (raiz != NULL)) {
+        if (raiz != NULL) {
+            printf("%d\n", (*raiz) -> num);
+            if ((*raiz)->pDir != NULL) push(p, (*raiz)->pDir);
+            raiz = (*raiz)->pEsq;
+        } else {
+          raiz = pop(p);
+        }
+    }
+    free_pilha(p);
+}
+
+/** Imprime em-ordem */
+void i_emOrdem_ArvBin(ArvBin *raiz) {
+    Pilha *p = cria_pilha();
+    while ((tamanho_pilha(p) > 0) || (raiz != NULL)) {
+        if (raiz != NULL) {
+            push(p, (*raiz)->pDir);
+            raiz = (*raiz)->pEsq;
+        } else {
+          raiz = pop(p);
+          printf("%d\n", (*raiz) -> num);
+          raiz = (*raiz)->pDir;
+        }
+    }
+    free_pilha(p);
+}
+
+/** Imprime nível */
+void it_emNivel_ArvBin(ArvBin *raiz) {
+    Fila *f = queue_create();
+    enfileira(f, raiz);
+    while (tamanho_fila(f) > 0) {
+        raiz = desenfileira(f);
+        printf("%d\n", (*raiz) -> num);
+        if ((*raiz)->pEsq != NULL) enfileira(f, (*raiz)->pEsq);
+        if ((*raiz)->pDir != NULL) enfileira(f, (*raiz)->pDir);
+    }
+    free_fila(f);
+}
+
 /**
 Libera um NO da memória
 */
-void libera_secretaco(ArvBin *raiz){
+void libera_no(ArvBin *raiz){
     if(!estaVazia_ArvBin(*raiz)){
         if(!(*raiz) -> pEsq == NULL){
         libera_ArvBin(&(*raiz) -> pEsq);
@@ -165,7 +169,7 @@ Libera a árvore binária da memória
 void libera_ArvBin(ArvBin *raiz){
     if(raiz == NULL) return;
     
-    libera_secretaco(raiz);
+    libera_no(raiz);
 
     // free(raiz);
 }
