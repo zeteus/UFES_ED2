@@ -3,6 +3,6 @@
 
 #include "item.h"
 
-Item* insert_sort(Item* a, int N);
+void sort(Item *a, int lo, int hi);
 
 #endif /*INSERT_SORT_H*/

@@ -3,6 +3,6 @@
 
 #include "item.h"
 
-Item* shaker_sort(Item* a, int N);
+void sort(Item *a, int lo, int hi);
 
 #endif /*SHAKER_SORT_H*/

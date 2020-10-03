@@ -3,6 +3,6 @@
 
 #include "item.h"
 
-Item* bubble_sort(Item* a, int N);
+void sort(Item *a, int lo, int hi);
 
 #endif /*BUBBLE_SORT_H*/
