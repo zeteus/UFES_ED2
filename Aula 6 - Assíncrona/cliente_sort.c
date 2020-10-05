@@ -18,19 +18,10 @@ int main(char argc, char** argv) {
         // for(int i = 0; i < N; i++) scanf("%d", &a[i]);
     //  Ler os N itens do arquivo
     int i = 0;
-    char *line_buf = NULL;
-    size_t line_buf_size = 0;
-    int line_count = 0;
-    ssize_t line_size;
     FILE *file = NULL;
-    file = fopen(argv[2][0], "r");
-    line_size = getline(&line_buf, &line_buf_size, file);
-    while (line_size >= 0) {
-        a[i] = atoi(line_buf);
-        line_size = getline(&line_buf, &line_buf_size, file);
-        line_count++;
-        i++;
-    }
+    file = fopen(argv[2], "r");
+    if(file == NULL) exit(1);
+    while(fscanf(file, "%d\n", &a[i]) != EOF) i++;
     fclose(file);
     // Print do vetor desordenado
         // printf("\nVetor desordenado:\n");
