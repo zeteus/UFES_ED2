@@ -3,6 +3,7 @@
 #include <time.h>
 #include "item.h"
 #include "merge_sort.h"
+#include "merge_cutoff.h"
 
 extern void sort(Item *a, int lo, int hi);
 
